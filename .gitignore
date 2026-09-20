@@ -1,0 +1,32 @@
+# makepkg build output — pkg/ leaks .BUILDINFO (build paths + full package list)
+pkg/
+src/
+*.pkg.tar.zst
+*.pkg.tar.zst.sig
+*.log
+.BUILDINFO
+.PKGINFO
+
+# Release artifacts — attach these to a GitHub Release, not to git
+*.zip
+*.tar.gz
+
+# Desktop-environment cruft
+.directory
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Editor / tooling
+*~
+*.swp
+*.swo
+*.bak
+*.orig
+.idea/
+.vscode/
+.ruff_cache/
