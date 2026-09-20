@@ -1,8 +1,8 @@
 # Contributing
 
-Thanks for taking an interest. This is a small solo project, so please **open
-an issue before starting anything large** — it saves you writing code that
-doesn't fit the direction.
+Thank you for taking an interest. This is a small solo project, so please open
+an issue before starting anything large. It will save you writing code that
+does not fit the direction.
 
 ## Running from source
 
@@ -15,9 +15,9 @@ python3 kbullet.py
 The only dependency is PyQt6. There is no build step: `kbullet.py` is the whole
 program.
 
-Point the app at a scratch directory while developing, so you don't churn your
-real journal — **File → Settings → Journal directory**, or edit `journal_dir`
-in `~/.config/Kbullet/Settings.conf`.
+Point the app at a scratch directory while developing, so that you do not churn
+your real journal. Use **File, then Settings, then Journal directory**, or edit
+`journal_dir` in `~/.config/Kbullet/Settings.conf`.
 
 ## Layout
 
@@ -45,7 +45,7 @@ Two things are worth knowing before you change file handling:
   docstrings on classes and non-trivial methods.
 - Keep it dependency-free beyond PyQt6.
 - `.editorconfig` covers whitespace; please keep the file free of trailing
-  whitespace and ending with a newline.
+  whitespace, and make sure each one ends with a newline.
 
 Before opening a PR:
 
@@ -53,8 +53,8 @@ Before opening a PR:
 python3 -m py_compile kbullet.py
 ```
 
-and launch the app to click through what you changed. There is no test suite —
-if you add one, that's a welcome contribution in itself.
+Then launch the app and click through whatever you changed. There is no test
+suite, so if you add one, that is a welcome contribution in itself.
 
 ## Releasing
 
@@ -62,6 +62,7 @@ if you add one, that's a welcome contribution in itself.
 2. Add a section to `CHANGELOG.md`.
 3. Tag `vX.Y.Z` and push the tag.
 4. Run `updpkgsums` to fill in the real `sha256sums` for the new tarball.
+5. Commit the updated `PKGBUILD`.
 
 ## Licence
 

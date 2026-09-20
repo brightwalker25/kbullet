@@ -33,7 +33,7 @@ sudo pacman -U kbullet-2.1.0-1-any.pkg.tar.zst
 ```
 
 Never pass `--overwrite` to work around a file conflict. A conflict means
-another install is already holding those paths — remove it first:
+another install is already holding those paths, so remove it first:
 
 ```sh
 sudo pacman -Rns kbullet          # if a previous package is installed
@@ -42,7 +42,7 @@ sudo rm -f /usr/local/bin/kbullet /usr/local/bin/kbullet.py   # older manual ins
 
 ## Cutting a release
 
-1. Bump `__version__` in `kbullet.py` and `pkgver` in `PKGBUILD` — they must
+1. Bump `__version__` in `kbullet.py` and `pkgver` in `PKGBUILD`. The two must
    match.
 2. Add the release to `CHANGELOG.md`.
 3. Commit, tag and push:
@@ -59,12 +59,12 @@ sudo rm -f /usr/local/bin/kbullet /usr/local/bin/kbullet.py   # older manual ins
 5. Commit the updated `PKGBUILD`.
 
 `sha256sums` ships as `SKIP` until a tag exists. Leaving it as `SKIP` in a
-published package is wrong: it disables integrity checking entirely, so a
-corrupted or tampered tarball would install silently.
+published package is wrong, because it disables integrity checking entirely: a
+corrupted or tampered-with tarball would install silently.
 
 ## Publishing to the AUR
 
-Requires an AUR account with your SSH key registered.
+This requires an AUR account with your SSH key registered.
 
 ```sh
 makepkg --printsrcinfo > .SRCINFO
@@ -88,7 +88,7 @@ namcap kbullet-2.1.0-1-any.pkg.tar.zst
 
 ## Other distributions
 
-There is no package yet. Manual install:
+There is no package yet, so install it by hand:
 
 ```sh
 sudo install -Dm755 kbullet.py /usr/local/bin/kbullet
@@ -96,14 +96,15 @@ sudo install -Dm644 kbullet.desktop /usr/share/applications/kbullet.desktop
 ```
 
 PyQt6 comes from `python3-pyqt6` on Debian and Ubuntu, `python3-qt6` on Fedora,
-`python311-qt6` on openSUSE.
+and `python311-qt6` on openSUSE.
 
 For a per-user install needing no root, use `~/.local/bin` and
 `~/.local/share/applications` instead.
 
-## A note on build artifacts
+## A note on build artefacts
 
 `makepkg` leaves `pkg/` and `src/` behind. Both are in `.gitignore`, and they
-should stay that way — `pkg/kbullet/.BUILDINFO` records the absolute build path
-and a complete list of every package installed on the build machine. Built
-`.pkg.tar.zst` files belong on a GitHub Release, not in git.
+should stay that way, because `pkg/kbullet/.BUILDINFO` records the absolute
+build path along with a complete list of every package installed on the build
+machine. Built `.pkg.tar.zst` files belong on a GitHub Release rather than in
+git.

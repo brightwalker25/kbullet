@@ -44,6 +44,7 @@ from PyQt6.QtWidgets import (
 )
 from PyQt6.QtCore import Qt, QTimer, QDate, QSettings, QMimeData, pyqtSignal
 from PyQt6.QtGui import (
+    QGuiApplication,
     QIcon, QAction, QKeySequence, QShortcut, QFont, QTextCharFormat,
     QColor, QTextCursor, QTextDocument, QPageLayout, QDrag, QPainter,
     QBrush, QPen
@@ -171,7 +172,7 @@ class SectionListWidget(QListWidget):
         menu.exec(event.globalPos())
 
     def dropEvent(self, event):
-        """Handle drop — we do everything manually so nothing gets lost."""
+        """Handle drop. We do everything manually so nothing gets lost."""
         source = event.source()
         if not isinstance(source, SectionListWidget):
             event.ignore()
@@ -226,7 +227,7 @@ class SectionListWidget(QListWidget):
         self.insertItem(row, item)
 
     def _style_item(self, item):
-        """Color-code the item based on its bullet symbol, strikethrough if done."""
+        """Colour-code the item by its bullet symbol, striking it through if done."""
         text = item.text().strip()
         if not text:
             return
@@ -250,7 +251,7 @@ class SectionListWidget(QListWidget):
         return [self.item(i).text() for i in range(self.count())]
 
     def sort_by_type(self):
-        """Sort entries by symbol type: Tasks, Events, Notes, then status."""
+        """Sort by symbol: urgent, priority, task, event, note, mood, then status."""
         entries = self.get_entries()
         self._pre_sort_order = list(entries)  # save for undo
         order = {'!': 0, '*': 1, '•': 2, '○': 3, '—': 4, '=': 5,
@@ -364,7 +365,7 @@ class Kbullet(QMainWindow):
         self.load_current_day()
 
     def init_ui(self):
-        """Initialize the user interface"""
+        """Initialise the user interface."""
         self.setWindowTitle(f"Kbullet - {self.today}")
         self.setGeometry(100, 100, 1100, 800)
         self.setMinimumSize(400, 300)
@@ -646,7 +647,7 @@ class Kbullet(QMainWindow):
 
         main_layout.addWidget(self.sections_splitter, 1)
 
-        # --- Action buttons section (compact, centered) ---
+        # --- Action buttons section (compact, centred) ---
         self.action_widget = QWidget()
         action_main_layout = QVBoxLayout(self.action_widget)
         action_main_layout.setContentsMargins(0, 2, 0, 0)
@@ -658,7 +659,7 @@ class Kbullet(QMainWindow):
         self.selection_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         action_main_layout.addWidget(self.selection_label)
 
-        # Row 1: Modify Entry + Change Type — centered
+        # Row 1: Modify Entry + Change Type, centred
         row1 = QHBoxLayout()
         row1.setSpacing(6)
         row1.addStretch()
@@ -695,7 +696,7 @@ class Kbullet(QMainWindow):
         row1.addStretch()
         action_main_layout.addLayout(row1)
 
-        # Row 2: Mark Status — centered
+        # Row 2: Mark Status, centred
         row2 = QHBoxLayout()
         row2.setSpacing(6)
         row2.addStretch()
@@ -732,7 +733,7 @@ class Kbullet(QMainWindow):
         self.setup_tray()
 
         # Create status bar
-        self.statusBar().showMessage("Ready — drag entries between Morning, Afternoon, and Evening")
+        self.statusBar().showMessage("Ready. Drag entries between Morning, Afternoon and Evening.")
 
         # Focus on input field
         self.entry_input.setFocus()
@@ -786,7 +787,7 @@ class Kbullet(QMainWindow):
             self.update_action_buttons(False)
 
     # ------------------------------------------------------------------
-    # File I/O  — section-aware markdown format
+    # File I/O: section-aware markdown format
     # ------------------------------------------------------------------
 
     def load_current_day(self):
@@ -851,7 +852,7 @@ class Kbullet(QMainWindow):
                 if stripped and stripped[0] in '•○—=!*×><\\|':
                     sections[current_section].append(stripped)
         else:
-            # Legacy format — auto-assign by timestamp
+            # Legacy format: auto-assign by timestamp
             for line in lines:
                 stripped = line.strip()
                 if not stripped or stripped[0] not in '•○—=!*×><\\|':
@@ -934,7 +935,7 @@ class Kbullet(QMainWindow):
             if lw.unsort():
                 restored = True
         if restored:
-            self.statusBar().showMessage("Sort undone — original order restored", 2000)
+            self.statusBar().showMessage("Sort undone. Original order restored.", 2000)
         else:
             self.statusBar().showMessage("Nothing to unsort", 2000)
 
@@ -1082,7 +1083,7 @@ class Kbullet(QMainWindow):
         self.statusBar().showMessage("Entry marked as delegated", 2000)
 
     def mark_waiting(self):
-        """Mark selected entry as waiting for"""
+        """Mark the selected entry as waiting on someone or something."""
         if not self.selected_entry:
             return
         self.change_symbol('|')
@@ -1304,26 +1305,26 @@ pre {{ font-family: monospace; font-size: 10pt; white-space: pre-wrap; word-wrap
 <p>Kbullet uses Ryder Carroll's Bullet Journal notation with extensions:</p>
 <h3>Entry Types</h3>
 <table>
-<tr><td><b>•</b></td><td>Task — something you need to do</td></tr>
-<tr><td><b>○</b></td><td>Event — something scheduled or that happened</td></tr>
-<tr><td><b>—</b></td><td>Note — information to remember</td></tr>
-<tr><td><b>=</b></td><td>Mood — emotional state or feeling</td></tr>
-<tr><td><b>!</b></td><td>Urgent — needs immediate attention</td></tr>
-<tr><td><b>*</b></td><td>Priority — important but not urgent</td></tr>
+<tr><td><b>•</b></td><td>Task: something you need to do</td></tr>
+<tr><td><b>○</b></td><td>Event: something scheduled, or something that happened</td></tr>
+<tr><td><b>—</b></td><td>Note: information to remember</td></tr>
+<tr><td><b>=</b></td><td>Mood: how the day felt</td></tr>
+<tr><td><b>!</b></td><td>Urgent: needs immediate attention</td></tr>
+<tr><td><b>*</b></td><td>Priority: important, but not urgent</td></tr>
 </table>
 <h3>Status Markers</h3>
 <table>
-<tr><td><b>×</b></td><td>Done — task is complete</td></tr>
-<tr><td><b>&gt;</b></td><td>Migrated — moved to another day</td></tr>
-<tr><td><b>&lt;</b></td><td>Scheduled — moved to a future date</td></tr>
-<tr><td><b>\\</b></td><td>Delegated — handed off to someone else</td></tr>
-<tr><td><b>|</b></td><td>Waiting — waiting for someone/something</td></tr>
+<tr><td><b>×</b></td><td>Done: the task is complete</td></tr>
+<tr><td><b>&gt;</b></td><td>Migrated: moved to another day</td></tr>
+<tr><td><b>&lt;</b></td><td>Scheduled: moved to a future date</td></tr>
+<tr><td><b>\\</b></td><td>Delegated: handed to someone else</td></tr>
+<tr><td><b>|</b></td><td>Waiting: waiting on someone or something</td></tr>
 </table>
 <h3>Sections</h3>
 <table>
 <tr><td><b>🌅 Morning</b></td><td>Before noon</td></tr>
-<tr><td><b>☀️ Afternoon</b></td><td>12:00 – 17:00</td></tr>
-<tr><td><b>🌙 Evening</b></td><td>After 17:00</td></tr>
+<tr><td><b>☀️ Afternoon</b></td><td>12:00 to 16:59</td></tr>
+<tr><td><b>🌙 Evening</b></td><td>17:00 onwards</td></tr>
 </table>
 <p>Drag entries between sections to reorganise your day!<br>
 Right-click any entry for quick actions.</p>
@@ -1385,7 +1386,7 @@ Right-click any entry for quick actions.</p>
     # ------------------------------------------------------------------
 
     def setup_tray(self):
-        """Setup system tray icon"""
+        """Set up the system tray icon."""
         self.tray_icon = QSystemTrayIcon(self)
 
         icon = QIcon.fromTheme("accessories-text-editor")
@@ -2259,6 +2260,12 @@ def main():
     app = QApplication(sys.argv)
     app.setApplicationName("Kbullet")
     app.setOrganizationName("Kbullet")
+
+    # Sets the Wayland app_id (and the X11 WM_CLASS). Without it Qt falls back
+    # to the executable basename, so the window reports as "python3" and
+    # window rules, launchers and taskbars cannot target it. Must be set
+    # before any window is created.
+    QGuiApplication.setDesktopFileName("kbullet")
 
     journal = Kbullet()
     journal.show()

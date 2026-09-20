@@ -4,21 +4,24 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.1.0] — 2026-03-15
+## [2.1.0] - 2026-03-15
 
-First public release.
+The first version published to this repository. Earlier versions were never
+released publicly, and are recorded below for context.
 
 ### Added
-- Per-section sort menu (⇅) on each column: by type, by time, or undo
-- Right-click context menu on any entry — edit text, delete, change type,
-  mark status
-- Five further status markers: scheduled `<`, delegated `\`, waiting `|`,
-  alongside done `×` and migrated `>`
+- A per-section sort menu on each column, offering sort by type, sort by
+  time, or undo
+- A right-click context menu on any entry, for editing the text, deleting it,
+  changing its type or marking its status
+- Three further status markers, scheduled `<`, delegated `\` and waiting `|`,
+  alongside the existing done `×` and migrated `>`
 - Mood `=`, urgent `!` and priority `*` entry types
 - Master task list (<kbd>Ctrl</kbd>+<kbd>S</kbd>) gathering every open task,
   with a refresh button and a running count
 - Schedule a task from the master list onto a chosen future day
-- Compact mode: chrome hides automatically below 700px width
+- Compact mode, which hides the surrounding controls automatically below 700
+  pixels wide
 - Toggle the menu bar from **View**
 
 ### Changed
@@ -28,12 +31,18 @@ First public release.
 
 ### Fixed
 - Strikethrough is now cleared when an entry's status changes away from done
+- <kbd>Ctrl</kbd>+<kbd>Q</kbd> and the tray's Quit item now exit the
+  application. Both previously called `close()`, which the close handler
+  ignored unconditionally, so the app could only be quit by killing it
+- The window now sets a Wayland `app_id`, so it identifies itself as `kbullet`
+  rather than falling back to `python3`. Window rules, launchers and taskbars
+  can now target it
 
-## [2.0.0] — 2026-01-08
+## [2.0.0] - 2026-01-08
 
 ### Added
-- **Morning / Afternoon / Evening sections** — the day is now three columns
-  instead of one list
+- **Morning, Afternoon and Evening sections.** The day is now three columns
+  rather than a single list
 - Drag and drop entries within a section and between sections
 - New entries are filed automatically by the time of day
 - Section chooser in the input row, to override that default
@@ -45,13 +54,11 @@ First public release.
   sections by timestamp, and the headers are added the next time that day is
   saved.
 
-## [1.0.0] — 2025
+## [1.0.0] - 2025-12-20
 
 ### Added
-- Initial release: daily markdown journal, core bullet notation, calendar
+- The first working version: daily markdown journal, core bullet notation, calendar
   navigation, week and month views, search, unfinished tasks, printing,
   system tray, configurable journal directory
 
 [2.1.0]: https://github.com/brightwalker25/kbullet/releases/tag/v2.1.0
-[2.0.0]: https://github.com/brightwalker25/kbullet/releases/tag/v2.0.0
-[1.0.0]: https://github.com/brightwalker25/kbullet/releases/tag/v1.0.0
