@@ -146,6 +146,11 @@ This is not required, and Kbullet does not depend on it.
 Issues and pull requests are welcome. Please open an issue before starting
 anything large. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
+## Written with AI help
+
+This was written with help from AI. I have checked the code, but if you would
+prefer not to use it because AI was involved, that is your choice.
+
 ## Licence
 
 Kbullet is licensed under GPL-3.0-or-later. See [LICENSE](LICENSE).
