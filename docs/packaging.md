@@ -58,8 +58,8 @@ sudo rm -f /usr/local/bin/kbullet /usr/local/bin/kbullet.py   # older manual ins
    ```
 5. Commit the updated `PKGBUILD`.
 
-`sha256sums` ships as `SKIP` until a tag exists. Leaving it as `SKIP` in a
-published package is wrong, because it disables integrity checking entirely: a
+`sha256sums` holds the checksum of the tagged release tarball, so update it
+with every release. Setting it to `SKIP` in a published package is wrong, because it disables integrity checking entirely: a
 corrupted or tampered-with tarball would install silently.
 
 ## Publishing to the AUR

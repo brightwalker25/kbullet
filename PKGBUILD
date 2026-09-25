@@ -8,7 +8,7 @@ url="https://github.com/brightwalker25/kbullet"
 license=('GPL-3.0-or-later')
 depends=('python' 'python-pyqt6')
 source=("$pkgname-$pkgver.tar.gz::$url/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('SKIP')  # run `updpkgsums` once the v2.1.0 tag exists
+sha256sums=('33d6a65201a6a4cfea82011da6d23bb626f8e1d4180ed6d6a76b0432eed73973')
 
 package() {
     cd "$srcdir/$pkgname-$pkgver"
