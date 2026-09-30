@@ -61,15 +61,16 @@ There are six entry types:
 | `!` | Urgent |
 | `*` | Priority |
 
-There are five statuses, which you apply to an entry that already exists:
+There are six statuses, which you apply to an entry that already exists:
 
 | Symbol | Meaning |
 |:---:|---|
 | `×` | Done, shown greyed out and struck through |
 | `>` | Migrated to another day |
 | `<` | Scheduled for a specific date |
-| `\` | Delegated to someone else |
-| `\|` | Waiting on someone else |
+| `\|` | In progress, started but not finished |
+| `/` | Delegated to someone else |
+| `\` | Waiting on someone or something |
 
 ## Adding entries
 
@@ -93,8 +94,8 @@ entry offers the same options in a context menu:
 - **Edit** changes the text, keeping the symbol and timestamp.
 - **Del** removes the entry.
 - **Change type** swaps `•` for `○`, `—`, `=`, `!` or `*`.
-- **Mark status** applies done, un-done, migrate, schedule, delegated or
-  waiting.
+- **Mark status** applies done, un-done, migrate, schedule, in progress,
+  delegated or waiting.
 
 The action buttons stay greyed out until you select something.
 

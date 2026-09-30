@@ -22,7 +22,8 @@ Mood `=`, urgent `!` and priority `*` have no shortcut. Choose them from the
 | <kbd>Ctrl</kbd>+<kbd>D</kbd> | Mark done `×` |
 | <kbd>Ctrl</kbd>+<kbd>M</kbd> | Migrate `>` to another day, which opens a date picker |
 
-Edit, delete, un-done, delegated `\` and waiting `|` have no shortcuts. Use the
+Edit, delete, un-done, in progress `|`, delegated `/` and waiting `\` have no
+shortcuts. Use the
 buttons beneath the columns, or right-click the entry.
 
 ## Moving around
@@ -100,5 +101,6 @@ menu.
 | `×` | Done | Grey, struck through |
 | `>` | Migrated | Purple |
 | `<` | Scheduled | Red |
-| `\` | Delegated | Teal |
-| `\|` | Waiting | Violet |
+| `\|` | In progress | Lime |
+| `/` | Delegated | Teal |
+| `\` | Waiting | Violet |

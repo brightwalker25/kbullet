@@ -73,12 +73,13 @@ class SectionListWidget(QListWidget):
         '×': '#7f8c8d',   # Complete - grey
         '>': '#8e44ad',   # Migrated - purple
         '<': '#e74c3c',   # Scheduled - red
-        '\\': '#16a085',  # Delegated - teal
-        '|': '#9b59b6',   # Waiting - violet
+        '/': '#16a085',   # Delegated - teal
+        '\\': '#9b59b6',  # Waiting - violet
+        '|': '#a4c639',   # In progress - lime
     }
 
     # All valid bullet symbols for parsing
-    VALID_SYMBOLS = '•○—=!*×><\\|'
+    VALID_SYMBOLS = '•○—=!*×></\\|'
 
     def __init__(self, section_name, parent=None):
         super().__init__(parent)
@@ -166,8 +167,9 @@ class SectionListWidget(QListWidget):
         status_menu.addAction("• Un-done").triggered.connect(main.mark_undone)
         status_menu.addAction("> Migrate").triggered.connect(main.mark_migrated)
         status_menu.addAction("< Schedule").triggered.connect(main.show_master_task_list)
-        status_menu.addAction("\\ Delegated").triggered.connect(main.mark_delegated)
-        status_menu.addAction("| Waiting").triggered.connect(main.mark_waiting)
+        status_menu.addAction("| In progress").triggered.connect(main.mark_in_progress)
+        status_menu.addAction("/ Delegated").triggered.connect(main.mark_delegated)
+        status_menu.addAction("\\ Waiting").triggered.connect(main.mark_waiting)
 
         menu.exec(event.globalPos())
 
@@ -238,7 +240,7 @@ class SectionListWidget(QListWidget):
             item.setForeground(QColor(color))
 
         # Grey out status markers
-        if symbol in ('×', '>', '<', '\\', '|'):
+        if symbol in ('×', '>', '<', '/', '\\'):
             item.setForeground(QColor(self.SYMBOL_COLORS.get(symbol, '#7f8c8d')))
 
         # Strikethrough for done entries, clear it for everything else
@@ -251,11 +253,12 @@ class SectionListWidget(QListWidget):
         return [self.item(i).text() for i in range(self.count())]
 
     def sort_by_type(self):
-        """Sort by symbol: urgent, priority, task, event, note, mood, then status."""
+        """Sort by symbol: urgent, priority, task, in progress, event, note, mood,
+        then status."""
         entries = self.get_entries()
         self._pre_sort_order = list(entries)  # save for undo
-        order = {'!': 0, '*': 1, '•': 2, '○': 3, '—': 4, '=': 5,
-                 '×': 6, '>': 7, '<': 8, '\\': 9, '|': 10}
+        order = {'!': 0, '*': 1, '•': 2, '|': 3, '○': 4, '—': 5, '=': 6,
+                 '×': 7, '>': 8, '<': 9, '/': 10, '\\': 11}
         entries.sort(key=lambda e: (order.get(e[0] if e else '', 99), e))
         self.clear()
         for e in entries:
@@ -320,12 +323,13 @@ class Kbullet(QMainWindow):
         'complete': '×',
         'migrated': '>',
         'scheduled': '<',
-        'delegated': '\\',
-        'waiting': '|',
+        'in_progress': '|',
+        'delegated': '/',
+        'waiting': '\\',
     }
 
     # All valid bullet symbols for parsing
-    VALID_SYMBOLS = '•○—=!*×><\\|'
+    VALID_SYMBOLS = '•○—=!*×></\\|'
 
     SECTIONS = ['Morning', 'Afternoon', 'Evening']
 
@@ -706,8 +710,9 @@ class Kbullet(QMainWindow):
             ('undone_btn', '• Un-done', self.mark_undone),
             ('migrate_btn', '> Migrate', self.mark_migrated),
             ('schedule_btn', '< Schedule', self.show_master_task_list),
-            ('delegated_btn', '\\ Delegated', self.mark_delegated),
-            ('waiting_btn', '| Waiting', self.mark_waiting),
+            ('progress_btn', '| In progress', self.mark_in_progress),
+            ('delegated_btn', '/ Delegated', self.mark_delegated),
+            ('waiting_btn', '\\ Waiting', self.mark_waiting),
         ]
 
         for attr, label, callback in status_buttons_data:
@@ -849,13 +854,13 @@ class Kbullet(QMainWindow):
                     if name in self.SECTIONS:
                         current_section = name
                         continue
-                if stripped and stripped[0] in '•○—=!*×><\\|':
+                if stripped and stripped[0] in '•○—=!*×></\\|':
                     sections[current_section].append(stripped)
         else:
             # Legacy format: auto-assign by timestamp
             for line in lines:
                 stripped = line.strip()
-                if not stripped or stripped[0] not in '•○—=!*×><\\|':
+                if not stripped or stripped[0] not in '•○—=!*×></\\|':
                     continue
                 # Try to extract time from [HH:MM]
                 section = 'Morning'
@@ -1001,6 +1006,7 @@ class Kbullet(QMainWindow):
         self.undone_btn.setEnabled(enabled)
         self.migrate_btn.setEnabled(enabled)
         self.schedule_btn.setEnabled(enabled)
+        self.progress_btn.setEnabled(enabled)
         self.delegated_btn.setEnabled(enabled)
         self.waiting_btn.setEnabled(enabled)
 
@@ -1075,18 +1081,25 @@ class Kbullet(QMainWindow):
         self.change_symbol('•')
         self.statusBar().showMessage("Entry reverted to task", 2000)
 
+    def mark_in_progress(self):
+        """Mark the selected entry as in progress."""
+        if not self.selected_entry:
+            return
+        self.change_symbol('|')
+        self.statusBar().showMessage("Entry marked as in progress", 2000)
+
     def mark_delegated(self):
         """Mark selected entry as delegated"""
         if not self.selected_entry:
             return
-        self.change_symbol('\\')
+        self.change_symbol('/')
         self.statusBar().showMessage("Entry marked as delegated", 2000)
 
     def mark_waiting(self):
         """Mark the selected entry as waiting on someone or something."""
         if not self.selected_entry:
             return
-        self.change_symbol('|')
+        self.change_symbol('\\')
         self.statusBar().showMessage("Entry marked as waiting", 2000)
 
     def mark_migrated(self):
@@ -1317,8 +1330,9 @@ pre {{ font-family: monospace; font-size: 10pt; white-space: pre-wrap; word-wrap
 <tr><td><b>×</b></td><td>Done: the task is complete</td></tr>
 <tr><td><b>&gt;</b></td><td>Migrated: moved to another day</td></tr>
 <tr><td><b>&lt;</b></td><td>Scheduled: moved to a future date</td></tr>
-<tr><td><b>\\</b></td><td>Delegated: handed to someone else</td></tr>
-<tr><td><b>|</b></td><td>Waiting: waiting on someone or something</td></tr>
+<tr><td><b>|</b></td><td>In progress: started, not finished</td></tr>
+<tr><td><b>/</b></td><td>Delegated: handed to someone else</td></tr>
+<tr><td><b>\\</b></td><td>Waiting: waiting on someone or something</td></tr>
 </table>
 <h3>Sections</h3>
 <table>
@@ -1371,7 +1385,7 @@ Right-click any entry for quick actions.</p>
             "<p>Uses Ryder Carroll's Bullet Journal notation with extensions</p>"
             "<p><b>Features:</b> Morning/Afternoon/Evening sections, "
             "drag-and-drop, sort by type or time, right-click context menus, "
-            "11 entry symbols, colour-coded entries</p>"
+            "12 entry symbols, colour-coded entries</p>"
             "<hr>"
             "<p>Copyright (C) 2026 brightwalker25</p>"
             "<p>This program comes with ABSOLUTELY NO WARRANTY. It is free "
@@ -1614,7 +1628,7 @@ class UnfinishedTasksDialog(QDialog):
             with open(file_path, 'r', encoding='utf-8') as f:
                 for line in f:
                     line = line.strip()
-                    if line.startswith('•'):
+                    if line.startswith(('•', '|')):
                         item = QListWidgetItem(f"[{file_path.stem}] {line}")
                         item.setData(Qt.ItemDataRole.UserRole, str(file_path))
                         self.task_list.addItem(item)
@@ -1701,12 +1715,12 @@ class MasterTaskListDialog(QDialog):
                 if stripped.startswith('## ') and stripped[3:] in self.SECTIONS:
                     current_section = stripped[3:]
                     continue
-                if stripped and stripped[0] in '•○—=!*×><\\|':
+                if stripped and stripped[0] in '•○—=!*×></\\|':
                     sections[current_section].append(stripped)
         else:
             for line in lines:
                 stripped = line.strip()
-                if stripped and stripped[0] in '•○—=!*×><\\|':
+                if stripped and stripped[0] in '•○—=!*×></\\|':
                     sections['Morning'].append(stripped)
         return sections
 
@@ -1721,7 +1735,7 @@ class MasterTaskListDialog(QDialog):
             sections = self._parse_sections(content)
             for sec_name in self.SECTIONS:
                 for line in sections[sec_name]:
-                    if line.startswith('•'):
+                    if line.startswith(('•', '|')):
                         self.tasks.append({
                             'date': date_str,
                             'file': file_path,
@@ -1856,12 +1870,12 @@ class WeekViewDialog(QDialog):
                 if stripped.startswith('## ') and stripped[3:] in self.SECTIONS:
                     current_section = stripped[3:]
                     continue
-                if stripped and stripped[0] in '•○—=!*×><\\|':
+                if stripped and stripped[0] in '•○—=!*×></\\|':
                     sections[current_section].append(stripped)
         else:
             for line in lines:
                 stripped = line.strip()
-                if stripped and stripped[0] in '•○—=!*×><\\|':
+                if stripped and stripped[0] in '•○—=!*×></\\|':
                     sections['Morning'].append(stripped)
         return sections
 
@@ -2068,9 +2082,9 @@ class MonthViewDialog(QDialog):
                 with open(day_file, 'r', encoding='utf-8') as f:
                     for line in f:
                         line = line.strip()
-                        if line and line[0] in '•○—=!*×><\\|':
+                        if line and line[0] in '•○—=!*×></\\|':
                             total_entries += 1
-                            if line[0] == '•':
+                            if line[0] in '•|':
                                 total_tasks += 1
                             elif line[0] == '×':
                                 completed_tasks += 1
@@ -2113,12 +2127,12 @@ class MonthViewDialog(QDialog):
                 if stripped.startswith('## ') and stripped[3:] in self.SECTIONS:
                     current_section = stripped[3:]
                     continue
-                if stripped and stripped[0] in '•○—=!*×><\\|':
+                if stripped and stripped[0] in '•○—=!*×></\\|':
                     sections[current_section].append(stripped)
         else:
             for line in lines:
                 stripped = line.strip()
-                if stripped and stripped[0] in '•○—=!*×><\\|':
+                if stripped and stripped[0] in '•○—=!*×></\\|':
                     sections['Morning'].append(stripped)
         return sections
 

@@ -4,6 +4,17 @@ All notable changes to this project are documented here. The format follows
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project
 adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+- An in progress status `|` for a task that has been started but not
+  finished. It counts as an open task and appears in the master task list.
+
+### Changed
+- Delegated is now `/` and waiting is now `\`. Day files written by earlier
+  versions keep their old characters, so an old `\` now reads as waiting and
+  an old `|` as in progress.
+
 ## [2.1.0] - 2026-03-15
 
 The first version published to this repository. Earlier versions were never

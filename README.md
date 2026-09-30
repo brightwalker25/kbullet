@@ -16,7 +16,7 @@ plans change.
 
 - Three time-of-day sections, with entries filed automatically by the clock
 - Drag and drop within and between sections
-- Eleven bullet-journal symbols, each colour-coded
+- Twelve bullet-journal symbols, each colour-coded
 - Sorting by type or chronologically, per section or across the whole day, with
   an in-session undo
 - Week and month views, both printable, with per-day statistics
@@ -68,11 +68,11 @@ python3 kbullet.py
 | `•` | Task      | | `×` | Done |
 | `○` | Event     | | `>` | Migrated |
 | `—` | Note      | | `<` | Scheduled |
-| `=` | Mood      | | `\` | Delegated |
-| `!` | Urgent    | | `\|` | Waiting |
-| `*` | Priority  | | | |
+| `=` | Mood      | | `\|` | In progress |
+| `!` | Urgent    | | `/` | Delegated |
+| `*` | Priority  | | `\` | Waiting |
 
-The six symbols in the left column are entry *types*. The five on the right are
+The six symbols in the left column are entry *types*. The six on the right are
 *statuses*, which you apply to an entry that already exists. Completed entries
 are greyed out and struck through.
 
